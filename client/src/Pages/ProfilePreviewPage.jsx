@@ -9,7 +9,7 @@ const ProfilePreviewPage = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // 🔹 Fetch user profile from backend
+  // 🔹 Fetch user profile
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -18,13 +18,10 @@ const ProfilePreviewPage = () => {
           { withCredentials: true }
         );
 
-        if (res.data.success) {
-          setProfile(res.data.profile);
-        } else {
-          alert("No profile found. Please create one first.");
-        }
-      } catch (error) {
-        console.error("Error fetching profile:", error);
+        if (res.data.success) setProfile(res.data.profile);
+        else alert("No profile found. Please create one first.");
+      } catch (err) {
+        console.error(err);
         alert("Failed to fetch profile. Please login again.");
       } finally {
         setLoading(false);
@@ -33,15 +30,14 @@ const ProfilePreviewPage = () => {
     fetchProfile();
   }, []);
 
-  if (loading) {
+  if (loading)
     return (
       <div className="min-h-screen flex items-center justify-center text-white text-xl bg-[#0a0018]">
         Loading profile...
       </div>
     );
-  }
 
-  if (!profile) {
+  if (!profile)
     return (
       <div className="min-h-screen flex flex-col items-center justify-center text-white bg-[#0a0018]">
         <p className="text-gray-400 text-lg mb-6">
@@ -52,7 +48,6 @@ const ProfilePreviewPage = () => {
         </Button>
       </div>
     );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#030014] via-[#0a0020] to-[#1a0033] text-white flex flex-col items-center justify-center relative overflow-hidden">
@@ -68,94 +63,91 @@ const ProfilePreviewPage = () => {
         </h1>
         <p className="text-gray-400 mt-2">
           {isARMode
-            ? "Move your camera — your 3D holographic card appears live in AR!"
-            : "Preview your holographic 3D profile card in real-time AR mode."}
+            ? "Move your camera — your mini 3D card appears live!"
+            : "Preview your holographic AR profile card in real time."}
         </p>
       </motion.div>
 
-      {/* --- AR MODE (Markerless Live Camera View) --- */}
+      {/* --- AR Scene --- */}
       {isARMode ? (
         <div className="relative w-full h-[90vh] flex items-center justify-center">
           <iframe
             title="AR Scene"
             srcDoc={`<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar-nft.js"></script>
-    <style>
-      html, body { margin: 0; height: 100%; overflow: hidden; background: black; }
-    </style>
-  </head>
-  <body>
-    <a-scene
-      embedded
-      vr-mode-ui="enabled: false"
-      arjs="sourceType: webcam; trackingMethod: best; debugUIEnabled: false;"
-      renderer="logarithmicDepthBuffer: true;"
-    >
-      <!-- Floating AR Profile Card (Always Visible in Camera View) -->
-      <a-entity position="0 0 -2" rotation="0 0 0">
-        <a-box
-          width="2.8"
-          height="1.6"
-          depth="0.1"
-          material="color: #1a0033; opacity: 0.9; metalness: 0.8; roughness: 0.3; emissive: #7c3aed; emissiveIntensity: 0.6"
-          animation="property: rotation; to: 0 360 0; loop: true; dur: 12000; easing: linear"
-        ></a-box>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar-nft.js"></script>
+  <style>
+    html, body { margin: 0; height: 100%; overflow: hidden; background: black; }
+  </style>
+</head>
+<body>
+  <a-scene
+    embedded
+    vr-mode-ui="enabled: false"
+    arjs="sourceType: webcam; trackingMethod: best; debugUIEnabled: false;"
+    renderer="logarithmicDepthBuffer: true;"
+  >
+    <!-- Floating mini card always visible -->
+    <a-entity position="0 -0.2 -1.5" rotation="0 0 0" scale="0.8 0.8 0.8">
+      <a-plane
+        width="1.8"
+        height="1"
+        color="#1a0033"
+        opacity="0.9"
+        material="metalness: 0.6; roughness: 0.3; emissive: #7c3aed; emissiveIntensity: 0.4;"
+        shadow
+        radius="0.1"
+      ></a-plane>
 
-        <!-- Profile Image -->
-        ${
-          profile.image
-            ? `<a-image src="${profile.image}" width="1.1" height="1.1" position="0 0.2 0.06" rotation="0 0 0"></a-image>`
-            : ""
-        }
+      ${
+        profile.image
+          ? `<a-image src="${profile.image}" width="0.5" height="0.5" position="0 0.1 0.02" rotation="0 0 0"></a-image>`
+          : ""
+      }
 
-        <!-- Name -->
-        <a-text
-          value="${profile.fullName}"
-          color="#c084fc"
-          width="3"
-          align="center"
-          position="0 1.0 0.1"
-        ></a-text>
+      <a-text
+        value="${profile.fullName}"
+        color="#c084fc"
+        width="2"
+        align="center"
+        position="0 0.4 0.03"
+      ></a-text>
 
-        <!-- Title -->
-        <a-text
-          value="${profile.title}"
-          color="#a5b4fc"
-          width="2.5"
-          align="center"
-          position="0 0.8 0.1"
-        ></a-text>
+      <a-text
+        value="${profile.title}"
+        color="#a5b4fc"
+        width="1.6"
+        align="center"
+        position="0 0.25 0.03"
+      ></a-text>
 
-        <!-- Bio -->
-        <a-text
-          value="${profile.bio}"
-          color="#d1d5db"
-          width="2.5"
-          align="center"
-          position="0 -0.7 0.1"
-        ></a-text>
+      <a-text
+        value="${profile.bio}"
+        color="#d1d5db"
+        width="1.6"
+        align="center"
+        position="0 -0.15 0.03"
+      ></a-text>
 
-        <!-- Website -->
-        <a-text
-          value="${profile.link}"
-          color="#818cf8"
-          width="2.5"
-          align="center"
-          position="0 -0.9 0.1"
-        ></a-text>
-      </a-entity>
+      <a-text
+        value="${profile.link}"
+        color="#818cf8"
+        width="1.5"
+        align="center"
+        position="0 -0.35 0.03"
+      ></a-text>
+    </a-entity>
 
-      <!-- Camera -->
-      <a-entity camera></a-entity>
-    </a-scene>
-  </body>
+    <!-- Camera -->
+    <a-entity camera></a-entity>
+  </a-scene>
+</body>
 </html>`}
-            className="w-full h-full border-0"
+            className="w-full h-full border-0 rounded-2xl"
             allow="camera; microphone; fullscreen"
           ></iframe>
 
