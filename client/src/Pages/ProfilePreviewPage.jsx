@@ -15,11 +15,9 @@ const ProfilePreviewPage = () => {
       try {
         const res = await axios.get(
           "https://holocard.onrender.com/api/holocard/profile/get",
-          {
-            withCredentials: true,
-          }
+          { withCredentials: true }
         );
-        console.log("Profile fetch response:", res.data);
+
         if (res.data.success) {
           setProfile(res.data.profile);
         } else {
@@ -70,12 +68,12 @@ const ProfilePreviewPage = () => {
         </h1>
         <p className="text-gray-400 mt-2">
           {isARMode
-            ? "Point your camera at the Hiro marker to see your holographic card."
-            : "Preview your 3D profile card in augmented reality."}
+            ? "Move your camera — your 3D holographic card appears live in AR!"
+            : "Preview your holographic 3D profile card in real-time AR mode."}
         </p>
       </motion.div>
 
-      {/* --- AR MODE --- */}
+      {/* --- AR MODE (Markerless Live Camera View) --- */}
       {isARMode ? (
         <div className="relative w-full h-[90vh] flex items-center justify-center">
           <iframe
@@ -86,29 +84,32 @@ const ProfilePreviewPage = () => {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar-nft.js"></script>
     <style>
       html, body { margin: 0; height: 100%; overflow: hidden; background: black; }
     </style>
   </head>
   <body>
-    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
-      <!-- Marker -->
-      <a-marker preset="hiro">
-        <!-- Card base -->
+    <a-scene
+      embedded
+      vr-mode-ui="enabled: false"
+      arjs="sourceType: webcam; trackingMethod: best; debugUIEnabled: false;"
+      renderer="logarithmicDepthBuffer: true;"
+    >
+      <!-- Floating AR Profile Card (Always Visible in Camera View) -->
+      <a-entity position="0 0 -2" rotation="0 0 0">
         <a-box
-          position="0 0.5 0"
           width="2.8"
           height="1.6"
           depth="0.1"
           material="color: #1a0033; opacity: 0.9; metalness: 0.8; roughness: 0.3; emissive: #7c3aed; emissiveIntensity: 0.6"
-          animation="property: rotation; to: 0 360 0; loop: true; dur: 8000; easing: linear"
+          animation="property: rotation; to: 0 360 0; loop: true; dur: 12000; easing: linear"
         ></a-box>
 
         <!-- Profile Image -->
         ${
           profile.image
-            ? `<a-image src="${profile.image}" width="1" height="1" position="0 1.3 0.06" rotation="0 0 0"></a-image>`
+            ? `<a-image src="${profile.image}" width="1.1" height="1.1" position="0 0.2 0.06" rotation="0 0 0"></a-image>`
             : ""
         }
 
@@ -118,7 +119,7 @@ const ProfilePreviewPage = () => {
           color="#c084fc"
           width="3"
           align="center"
-          position="0 1.7 0"
+          position="0 1.0 0.1"
         ></a-text>
 
         <!-- Title -->
@@ -127,7 +128,7 @@ const ProfilePreviewPage = () => {
           color="#a5b4fc"
           width="2.5"
           align="center"
-          position="0 1.5 0"
+          position="0 0.8 0.1"
         ></a-text>
 
         <!-- Bio -->
@@ -136,7 +137,7 @@ const ProfilePreviewPage = () => {
           color="#d1d5db"
           width="2.5"
           align="center"
-          position="0 1.2 0"
+          position="0 -0.7 0.1"
         ></a-text>
 
         <!-- Website -->
@@ -145,10 +146,11 @@ const ProfilePreviewPage = () => {
           color="#818cf8"
           width="2.5"
           align="center"
-          position="0 1.0 0"
+          position="0 -0.9 0.1"
         ></a-text>
-      </a-marker>
+      </a-entity>
 
+      <!-- Camera -->
       <a-entity camera></a-entity>
     </a-scene>
   </body>
@@ -157,6 +159,7 @@ const ProfilePreviewPage = () => {
             allow="camera; microphone; fullscreen"
           ></iframe>
 
+          {/* Exit Button */}
           <button
             onClick={() => setIsARMode(false)}
             className="absolute top-5 right-5 bg-purple-700/70 hover:bg-purple-800 text-white text-2xl rounded-full w-12 h-12"
@@ -171,7 +174,7 @@ const ProfilePreviewPage = () => {
             className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:scale-105 transition-all duration-300 shadow-[0_0_25px_rgba(168,85,247,0.5)] text-white font-semibold text-lg px-8 py-5 rounded-2xl flex items-center gap-2"
           >
             <Eye size={20} />
-            View in AR
+            View Live AR Card
           </Button>
 
           <Button
@@ -184,10 +187,10 @@ const ProfilePreviewPage = () => {
         </div>
       )}
 
+      {/* Footer */}
       <footer className="absolute bottom-6 text-gray-500 text-sm text-center">
         © {new Date().getFullYear()}{" "}
-        <span className="text-purple-400 font-semibold">ARdentity</span> — Built
-        by Prem
+        <span className="text-purple-400 font-semibold">ARdentity</span> — Built by Prem
       </footer>
     </div>
   );
