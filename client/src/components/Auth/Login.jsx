@@ -27,7 +27,7 @@ const Login = () => {
 
     try {
       const res = await axios.post(
-        "https://holocard.onrender.com/api/holocard/auth/login",
+        "http://localhost:3000/api/holocard/auth/login",
         formData,
         {
           withCredentials: true, // ✅ Important for cookies
