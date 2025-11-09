@@ -29,7 +29,7 @@ const CreateProfile = () => {
 
     try {
       const response = await axios.post(
-        "https://holocard.onrender.com0/api/holocard/profile/create",
+        "https://holocard.onrender.com/api/holocard/profile/create",
         formData,
         { withCredentials: true }
       );
