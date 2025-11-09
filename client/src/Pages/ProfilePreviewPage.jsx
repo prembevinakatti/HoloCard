@@ -12,13 +12,7 @@ import {
   useTexture,
 } from "@react-three/drei";
 import axios from "axios";
-import {
-  Github,
-  Linkedin,
-  Twitter,
-  Instagram,
-  Globe,
-} from "lucide-react";
+import { Github, Linkedin, Twitter, Instagram, Globe } from "lucide-react";
 
 // 🎴 Holographic 3D Business Card
 const HoloCard = ({ profile }) => {
@@ -72,7 +66,6 @@ const HoloCard = ({ profile }) => {
           color="#c084fc"
           anchorX="left"
           anchorY="middle"
-          font="https://fonts.gstatic.com/s/raleway/v14/1Ptug8zYS_SKggPNwIYqWqZPBQ.woff"
         >
           {profile?.fullName || "Prem Kumar"}
         </Text>
@@ -148,7 +141,11 @@ const HoloCard = ({ profile }) => {
             </a>
           )}
           {profile?.socials?.instagram && (
-            <a href={profile.socials.instagram} target="_blank" rel="noreferrer">
+            <a
+              href={profile.socials.instagram}
+              target="_blank"
+              rel="noreferrer"
+            >
               <Instagram
                 size={18}
                 className="hover:scale-125 transition-all"
