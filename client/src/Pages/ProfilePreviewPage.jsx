@@ -14,7 +14,7 @@ const ProfilePreviewPage = () => {
     const fetchProfile = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:3000/api/holocard/profile/get",
+          "https://holocard.onrender.com/api/holocard/profile/get",
           {
             withCredentials: true,
           }

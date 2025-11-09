@@ -30,7 +30,12 @@ module.exports.register = async (req, res) => {
       process.env.JWT_TOKEN,
       { expiresIn: "7d" }
     );
-    res.cookie("token", token);
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true, // Only over HTTPS
+      sameSite: "None", // Required for cross-site requests (e.g., frontend on different domain)
+      maxAge: 24 * 60 * 60 * 1000, // 1 day in ms
+    });
 
     return res.status(201).json({
       message: "User registered successfully.",
@@ -63,7 +68,12 @@ module.exports.login = async (req, res) => {
     const token = await jwt.sign({ userId: user._id }, process.env.JWT_TOKEN, {
       expiresIn: "7d",
     });
-    res.cookie("token", token);
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true, // Only over HTTPS
+      sameSite: "None", // Required for cross-site requests (e.g., frontend on different domain)
+      maxAge: 24 * 60 * 60 * 1000, // 1 day in ms
+    });
 
     return res.status(201).json({
       message: "User registered successfully.",

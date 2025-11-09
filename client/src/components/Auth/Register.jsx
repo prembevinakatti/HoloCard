@@ -28,7 +28,7 @@ const Register = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/holocard/auth/register",
+        "https://holocard.onrender.com/api/holocard/auth/register",
         formData,
         {
           withCredentials: true, // ✅ allows cookie to be set from backend
