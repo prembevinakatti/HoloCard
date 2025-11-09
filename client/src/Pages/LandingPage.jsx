@@ -10,6 +10,7 @@ import {
   Text,
   Html,
 } from "@react-three/drei";
+import { useNavigate } from "react-router-dom";
 
 // --- Holographic Card Component ---
 const HoloCard = () => {
@@ -113,6 +114,8 @@ const HoloCard = () => {
 };
 
 const LandingPage = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-[#030014] via-[#050026] to-[#1a0033] text-white overflow-hidden">
       {/* --- BACKGROUND --- */}
@@ -127,7 +130,10 @@ const LandingPage = () => {
           <span className="text-purple-500">Holo</span>Card
         </h1>
 
-        <Button className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:scale-105 duration-300 text-white font-medium px-6 py-2 rounded-xl shadow-[0_0_10px_rgba(168,85,247,0.6)]">
+        <Button
+          onClick={() => navigate("/register")}
+          className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:scale-105 duration-300 text-white font-medium px-6 py-2 rounded-xl shadow-[0_0_10px_rgba(168,85,247,0.6)]"
+        >
           Get Started
         </Button>
       </nav>

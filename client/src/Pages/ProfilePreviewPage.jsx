@@ -1,14 +1,64 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Eye, Share2 } from "lucide-react";
+import { Eye, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
 
 const ProfilePreviewPage = () => {
   const [isARMode, setIsARMode] = useState(false);
-  const userData = { name: "Prem Kumar", title: "Engineer | Developer" };
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // 🔹 Fetch user profile from backend
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:3000/api/holocard/profile/get",
+          {
+            withCredentials: true,
+          }
+        );
+        console.log("Profile fetch response:", res.data);
+        if (res.data.success) {
+          setProfile(res.data.profile);
+        } else {
+          alert("No profile found. Please create one first.");
+        }
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+        alert("Failed to fetch profile. Please login again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProfile();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white text-xl bg-[#0a0018]">
+        Loading profile...
+      </div>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center text-white bg-[#0a0018]">
+        <p className="text-gray-400 text-lg mb-6">
+          No AR Profile found. Please create one first.
+        </p>
+        <Button onClick={() => (window.location.href = "/create-profile")}>
+          Create Profile
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#030014] via-[#0a0020] to-[#1a0033] text-white flex flex-col items-center justify-center relative overflow-hidden">
+      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -20,66 +70,89 @@ const ProfilePreviewPage = () => {
         </h1>
         <p className="text-gray-400 mt-2">
           {isARMode
-            ? "Point your camera at the Hiro marker to see your 3D holographic card!"
-            : "Preview or view your AR card in augmented reality."}
+            ? "Point your camera at the Hiro marker to see your holographic card."
+            : "Preview your 3D profile card in augmented reality."}
         </p>
       </motion.div>
 
-      {/* ✅ AR MODE SECTION */}
+      {/* --- AR MODE --- */}
       {isARMode ? (
         <div className="relative w-full h-[90vh] flex items-center justify-center">
           <iframe
             title="AR Scene"
-            srcDoc={`
-              <!DOCTYPE html>
-              <html lang="en">
-              <head>
-                <meta charset="utf-8" />
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-                <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar-nft.js"></script>
-                <style>
-                  html, body { margin: 0; height: 100%; overflow: hidden; background: black; }
-                </style>
-              </head>
-              <body>
-                <a-scene
-                  embedded
-                  arjs="sourceType: webcam; debugUIEnabled: false;"
-                  vr-mode-ui="enabled: false"
-                  renderer="logarithmicDepthBuffer: true;"
-                >
-                  <a-marker preset="hiro">
-                    <a-box
-                      position="0 0.5 0"
-                      width="2.5"
-                      height="1.5"
-                      depth="0.1"
-                      material="color: #24005A; opacity: 0.9; metalness: 0.7; roughness: 0.2; emissive: #7c3aed; emissiveIntensity: 0.8"
-                      animation="property: rotation; to: 0 360 0; loop: true; dur: 6000; easing: linear"
-                    ></a-box>
+            srcDoc={`<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
+    <style>
+      html, body { margin: 0; height: 100%; overflow: hidden; background: black; }
+    </style>
+  </head>
+  <body>
+    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
+      <!-- Marker -->
+      <a-marker preset="hiro">
+        <!-- Card base -->
+        <a-box
+          position="0 0.5 0"
+          width="2.8"
+          height="1.6"
+          depth="0.1"
+          material="color: #1a0033; opacity: 0.9; metalness: 0.8; roughness: 0.3; emissive: #7c3aed; emissiveIntensity: 0.6"
+          animation="property: rotation; to: 0 360 0; loop: true; dur: 8000; easing: linear"
+        ></a-box>
 
-                    <a-text
-                      value="${userData.name}"
-                      color="#c084fc"
-                      width="3"
-                      align="center"
-                      position="0 1.3 0"
-                    ></a-text>
+        <!-- Profile Image -->
+        ${
+          profile.image
+            ? `<a-image src="${profile.image}" width="1" height="1" position="0 1.3 0.06" rotation="0 0 0"></a-image>`
+            : ""
+        }
 
-                    <a-text
-                      value="${userData.title}"
-                      color="#a5b4fc"
-                      width="2.5"
-                      align="center"
-                      position="0 1.1 0"
-                    ></a-text>
-                  </a-marker>
-                  <a-entity camera></a-entity>
-                </a-scene>
-              </body>
-              </html>
-            `}
+        <!-- Name -->
+        <a-text
+          value="${profile.fullName}"
+          color="#c084fc"
+          width="3"
+          align="center"
+          position="0 1.7 0"
+        ></a-text>
+
+        <!-- Title -->
+        <a-text
+          value="${profile.title}"
+          color="#a5b4fc"
+          width="2.5"
+          align="center"
+          position="0 1.5 0"
+        ></a-text>
+
+        <!-- Bio -->
+        <a-text
+          value="${profile.bio}"
+          color="#d1d5db"
+          width="2.5"
+          align="center"
+          position="0 1.2 0"
+        ></a-text>
+
+        <!-- Website -->
+        <a-text
+          value="${profile.link}"
+          color="#818cf8"
+          width="2.5"
+          align="center"
+          position="0 1.0 0"
+        ></a-text>
+      </a-marker>
+
+      <a-entity camera></a-entity>
+    </a-scene>
+  </body>
+</html>`}
             className="w-full h-full border-0"
             allow="camera; microphone; fullscreen"
           ></iframe>
@@ -102,17 +175,19 @@ const ProfilePreviewPage = () => {
           </Button>
 
           <Button
+            onClick={() => window.location.reload()}
             variant="outline"
             className="border border-purple-400/40 text-purple-300 hover:bg-purple-600/10 hover:scale-105 transition-all duration-300 px-8 py-5 rounded-2xl flex items-center gap-2"
           >
-            <Share2 size={20} /> Share AR Card
+            <RotateCcw size={20} /> Refresh
           </Button>
         </div>
       )}
 
       <footer className="absolute bottom-6 text-gray-500 text-sm text-center">
         © {new Date().getFullYear()}{" "}
-        <span className="text-purple-400 font-semibold">ARdentity</span> — Built by Prem
+        <span className="text-purple-400 font-semibold">ARdentity</span> — Built
+        by Prem
       </footer>
     </div>
   );

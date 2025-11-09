@@ -3,6 +3,8 @@ const express = require("express");
 require("dotenv").config();
 const cors = require("cors");
 const connectDB = require("./config/database");
+const authRoute = require("./routes/auth.route");
+const profileRoute = require("./routes/profile.route");
 
 const app = express();
 
@@ -15,6 +17,9 @@ const corsOptions = {
   credentials: true,
 };
 app.use(cors(corsOptions));
+
+app.use("/api/holocard/auth", authRoute);
+app.use("/api/holocard/profile", profileRoute);
 
 const PORT = process.env.PORT || 8080;
 

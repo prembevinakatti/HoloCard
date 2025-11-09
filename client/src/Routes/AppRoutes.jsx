@@ -10,12 +10,12 @@ import { Route, Routes } from "react-router-dom";
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/landing" element={<LandingPage />} />
+      <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/home" element={<HomePage />} />
       <Route path="/createProfile" element={<CreateProfile />} />
-      <Route path="/" element={<ProfilePreviewPage />} />
+      <Route path="/view" element={<ProfilePreviewPage />} />
     </Routes>
   );
 };

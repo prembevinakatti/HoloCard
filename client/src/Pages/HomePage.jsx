@@ -2,8 +2,10 @@ import React from "react";
 import { motion } from "framer-motion";
 import { UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#030014] via-[#0a0020] to-[#1a0033] text-white flex flex-col items-center justify-center relative overflow-hidden">
       {/* --- Background Glow Effects --- */}
@@ -27,14 +29,15 @@ const HomePage = () => {
         </h1>
 
         <p className="text-gray-300 max-w-xl mx-auto text-lg">
-          Build your holographic identity and showcase it to the world.  
-          Manage your profile, connect your data, and experience the next evolution of personal branding.
+          Build your holographic identity and showcase it to the world. Manage
+          your profile, connect your data, and experience the next evolution of
+          personal branding.
         </p>
 
         {/* --- Create Profile Button --- */}
         <div className="mt-10 flex justify-center">
           <Button
-            onClick={() => alert("Redirecting to profile creation...")}
+            onClick={() => navigate("/createProfile")}
             className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:scale-105 transition-all duration-300 shadow-[0_0_25px_rgba(168,85,247,0.5)] text-white font-semibold text-lg px-8 py-6 rounded-2xl flex items-center gap-2"
           >
             <UserPlus size={22} />
@@ -46,7 +49,8 @@ const HomePage = () => {
       {/* --- Footer --- */}
       <footer className="absolute bottom-6 text-gray-500 text-sm">
         © {new Date().getFullYear()}{" "}
-        <span className="text-purple-400 font-semibold">ARdentity</span> — Built by Prem
+        <span className="text-purple-400 font-semibold">ARdentity</span> — Built
+        by Prem
       </footer>
     </div>
   );

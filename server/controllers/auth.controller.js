@@ -15,7 +15,7 @@ module.exports.register = async (req, res) => {
       return res.status(409).json({ message: "User already exists." });
     }
 
-    const newUser = new authModel.create({
+    const newUser = await authModel.create({
       username,
       email,
       password,
@@ -27,7 +27,7 @@ module.exports.register = async (req, res) => {
 
     const token = await jwt.sign(
       { userId: newUser._id },
-      process.env.JWT_SECRET,
+      process.env.JWT_TOKEN,
       { expiresIn: "7d" }
     );
     res.cookie("token", token);
@@ -60,7 +60,7 @@ module.exports.login = async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials." });
     }
 
-    const token = await jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+    const token = await jwt.sign({ userId: user._id }, process.env.JWT_TOKEN, {
       expiresIn: "7d",
     });
     res.cookie("token", token);
