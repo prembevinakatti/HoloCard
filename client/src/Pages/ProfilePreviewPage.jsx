@@ -12,6 +12,13 @@ import {
   useTexture,
 } from "@react-three/drei";
 import axios from "axios";
+import {
+  Github,
+  Linkedin,
+  Globe,
+  Twitter,
+  Instagram,
+} from "lucide-react";
 
 // 🎴 Holographic 3D Card Component
 const HoloCard = ({ profile }) => {
@@ -24,35 +31,35 @@ const HoloCard = ({ profile }) => {
         <mesh>
           <boxGeometry args={[3.2, 1.9, 0.08]} />
           <meshPhysicalMaterial
-            color="#20004d"
+            color="#1e003a"
             roughness={0.25}
-            metalness={0.7}
-            transmission={0.7}
+            metalness={0.8}
+            transmission={0.6}
             transparent
-            opacity={0.9}
+            opacity={0.92}
             clearcoat={1}
             clearcoatRoughness={0.2}
-            emissive="#6d28d9"
-            emissiveIntensity={0.5}
+            emissive="#7c3aed"
+            emissiveIntensity={0.4}
           />
         </mesh>
 
-        {/* --- Frosted Overlay --- */}
+        {/* --- Subtle Light Overlay --- */}
         <mesh position={[0, 0, 0.06]}>
           <planeGeometry args={[3.1, 1.8]} />
           <meshStandardMaterial
-            color="#8b5cf6"
+            color="#a855f7"
             transparent
             opacity={0.08}
             emissive="#a855f7"
-            emissiveIntensity={0.25}
+            emissiveIntensity={0.3}
           />
         </mesh>
 
-        {/* --- User Name --- */}
+        {/* --- Name --- */}
         <Text
           position={[0, 0.55, 0.1]}
-          fontSize={0.24}
+          fontSize={0.25}
           color="#c084fc"
           anchorX="center"
           anchorY="middle"
@@ -60,10 +67,10 @@ const HoloCard = ({ profile }) => {
           {profile?.fullName || "Prem Kumar"}
         </Text>
 
-        {/* --- User Title --- */}
+        {/* --- Title --- */}
         <Text
-          position={[0, 0.28, 0.1]}
-          fontSize={0.13}
+          position={[0, 0.3, 0.1]}
+          fontSize={0.14}
           color="#a5b4fc"
           anchorX="center"
           anchorY="middle"
@@ -71,79 +78,125 @@ const HoloCard = ({ profile }) => {
           {profile?.title || "Engineer | Developer"}
         </Text>
 
-        {/* --- Avatar --- */}
-        <mesh position={[0, -0.15, 0.1]}>
-          <circleGeometry args={[0.35, 64]} />
+        {/* --- Profile Image --- */}
+        <mesh position={[0, -0.05, 0.1]}>
+          <circleGeometry args={[0.32, 64]} />
           <meshStandardMaterial
             map={texture}
-            emissive="#8b5cf6"
+            emissive="#a855f7"
             emissiveIntensity={0.3}
-            toneMapped={false}
           />
         </mesh>
 
-        {/* --- Bio Text --- */}
+        {/* --- Bio --- */}
         {profile?.bio && (
           <Html
-            position={[0, -0.9, 0.15]}
-            transform
-            distanceFactor={1.3}
-            style={{
-              width: "180px",
-              textAlign: "center",
-              color: "#d1d5db",
-              fontSize: "12px",
-              lineHeight: "1.4",
-              opacity: 0.85,
-            }}
-          >
-            {profile.bio.length > 100
-              ? profile.bio.substring(0, 100) + "..."
-              : profile.bio}
-          </Html>
-        )}
-
-        {/* --- Website / Social Link --- */}
-        {profile?.link && (
-          <Html
-            position={[0, -1.15, 0.15]}
+            position={[0, -0.75, 0.15]}
             transform
             distanceFactor={1.3}
             style={{
               width: "200px",
               textAlign: "center",
-              color: "#818cf8",
+              color: "#d1d5db",
               fontSize: "12px",
-              textDecoration: "underline",
-              cursor: "pointer",
+              lineHeight: "1.4",
+              opacity: 0.9,
+              fontFamily: "sans-serif",
             }}
           >
-            <a href={profile.link} target="_blank" rel="noopener noreferrer">
-              {profile.link.replace(/^https?:\/\//, "")}
-            </a>
+            {profile.bio.length > 90
+              ? profile.bio.substring(0, 90) + "..."
+              : profile.bio}
           </Html>
         )}
 
-        {/* --- Glow Side Accents --- */}
-        <mesh position={[1.5, 0, 0]}>
+        {/* --- Social Icons --- */}
+        {profile?.socials && (
+          <Html
+            position={[0, -1.1, 0.15]}
+            transform
+            distanceFactor={1.3}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              gap: "15px",
+              width: "200px",
+              alignItems: "center",
+            }}
+          >
+            {profile.socials.github && (
+              <a
+                href={profile.socials.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "#c084fc" }}
+              >
+                <Github size={18} />
+              </a>
+            )}
+            {profile.socials.linkedin && (
+              <a
+                href={profile.socials.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "#60a5fa" }}
+              >
+                <Linkedin size={18} />
+              </a>
+            )}
+            {profile.socials.twitter && (
+              <a
+                href={profile.socials.twitter}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "#38bdf8" }}
+              >
+                <Twitter size={18} />
+              </a>
+            )}
+            {profile.socials.instagram && (
+              <a
+                href={profile.socials.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "#f472b6" }}
+              >
+                <Instagram size={18} />
+              </a>
+            )}
+            {profile.link && (
+              <a
+                href={profile.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "#818cf8" }}
+              >
+                <Globe size={18} />
+              </a>
+            )}
+          </Html>
+        )}
+
+        {/* --- Side Glow Accents --- */}
+        <mesh position={[1.55, 0, 0]}>
           <boxGeometry args={[0.04, 1.8, 0.05]} />
           <meshStandardMaterial
             emissive="#a855f7"
-            emissiveIntensity={0.8}
+            emissiveIntensity={1}
             color="#9333ea"
           />
         </mesh>
-        <mesh position={[-1.5, 0, 0]}>
+        <mesh position={[-1.55, 0, 0]}>
           <boxGeometry args={[0.04, 1.8, 0.05]} />
           <meshStandardMaterial
             emissive="#9333ea"
-            emissiveIntensity={0.8}
+            emissiveIntensity={1}
             color="#a855f7"
           />
         </mesh>
 
-        {/* --- Floating Glow Particles --- */}
-        {[...Array(12)].map((_, i) => (
+        {/* --- Floating Particles --- */}
+        {[...Array(10)].map((_, i) => (
           <mesh
             key={i}
             position={[
@@ -161,6 +214,7 @@ const HoloCard = ({ profile }) => {
   );
 };
 
+// 🎥 Main AR Page
 const ProfilePreviewPage = () => {
   const videoRef = useRef(null);
   const [profile, setProfile] = useState(null);
@@ -182,7 +236,7 @@ const ProfilePreviewPage = () => {
     startCamera();
   }, []);
 
-  // 🧩 Fetch User Profile
+  // 🧩 Fetch Profile Data
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -190,7 +244,17 @@ const ProfilePreviewPage = () => {
           "https://holocard.onrender.com/api/holocard/profile/get",
           { withCredentials: true }
         );
-        if (res.data.success) setProfile(res.data.profile);
+        if (res.data.success) {
+          // Ensure social links structure exists
+          const p = res.data.profile;
+          p.socials = {
+            github: p.github || "",
+            linkedin: p.linkedin || "",
+            twitter: p.twitter || "",
+            instagram: p.instagram || "",
+          };
+          setProfile(p);
+        }
       } catch (err) {
         console.error("Profile fetch error:", err);
       } finally {
@@ -218,10 +282,10 @@ const ProfilePreviewPage = () => {
         className="absolute top-0 left-0 w-full h-full object-cover -z-10"
       />
 
-      {/* --- Overlay Glow Gradient --- */}
+      {/* --- Glow Overlay --- */}
       <div className="absolute inset-0 -z-5 bg-gradient-to-br from-[#030014]/40 via-[#0a0020]/30 to-[#1a0033]/50"></div>
 
-      {/* --- 3D Card Scene --- */}
+      {/* --- 3D Card --- */}
       <div className="relative flex items-center justify-center min-h-screen">
         <div className="w-[320px] h-[320px] md:w-[400px] md:h-[400px]">
           <Canvas camera={{ position: [0, 0, 4] }}>
@@ -235,14 +299,14 @@ const ProfilePreviewPage = () => {
         </div>
       </div>
 
-      {/* --- Footer Overlay --- */}
+      {/* --- Info Text --- */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
         className="absolute bottom-10 left-0 right-0 text-center text-gray-300"
       >
-        🪄 Move your camera — your holographic card stays floating in AR
+        🪄 Move your camera — your holographic card floats in AR!
       </motion.div>
 
       {/* --- Refresh Button --- */}
