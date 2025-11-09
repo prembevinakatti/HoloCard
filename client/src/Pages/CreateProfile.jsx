@@ -31,7 +31,12 @@ const CreateProfile = () => {
       const response = await axios.post(
         "https://holocard.onrender.com/api/holocard/profile/create",
         formData,
-        { withCredentials: true }
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
       );
 
       if (response.data.success) {
@@ -80,7 +85,10 @@ const CreateProfile = () => {
               Full Name
             </label>
             <div className="relative">
-              <User className="absolute left-3 top-2.5 text-gray-400" size={18} />
+              <User
+                className="absolute left-3 top-2.5 text-gray-400"
+                size={18}
+              />
               <Input
                 name="fullName"
                 value={formData.fullName}
@@ -99,7 +107,10 @@ const CreateProfile = () => {
               Profession / Title
             </label>
             <div className="relative">
-              <Briefcase className="absolute left-3 top-2.5 text-gray-400" size={18} />
+              <Briefcase
+                className="absolute left-3 top-2.5 text-gray-400"
+                size={18}
+              />
               <Input
                 name="title"
                 value={formData.title}
@@ -118,7 +129,10 @@ const CreateProfile = () => {
               Profile Image URL
             </label>
             <div className="relative">
-              <Image className="absolute left-3 top-2.5 text-gray-400" size={18} />
+              <Image
+                className="absolute left-3 top-2.5 text-gray-400"
+                size={18}
+              />
               <Input
                 name="image"
                 value={formData.image}
@@ -149,7 +163,10 @@ const CreateProfile = () => {
               Website / Portfolio
             </label>
             <div className="relative">
-              <Globe className="absolute left-3 top-2.5 text-gray-400" size={18} />
+              <Globe
+                className="absolute left-3 top-2.5 text-gray-400"
+                size={18}
+              />
               <Input
                 name="link"
                 value={formData.link}
